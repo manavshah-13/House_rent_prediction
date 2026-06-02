@@ -1,4 +1,6 @@
 <img width="1484" height="772" alt="Screenshot 2026-06-02 160543" src="https://github.com/user-attachments/assets/4ba99568-1e89-461b-89a8-98ee15287c6d" />
+
+
 # RentWise – Intelligent Rent Prediction System
 
 > **Smart Rental Valuation Powered by Machine Learning**
