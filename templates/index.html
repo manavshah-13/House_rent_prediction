@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentWise - Intelligent Rent Prediction System</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Background glowing gradients -->
+    <div class="blob-glow blob-1"></div>
+    <div class="blob-glow blob-2"></div>
+    <div class="blob-glow blob-3"></div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <span class="logo-icon"><i data-lucide="key-round"></i></span>
+                    <div class="logo-text">
+                        <h2>RentWise</h2>
+                        <p>Intelligent Rent Prediction</p>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <ul>
+                    <li class="menu-item active" data-tab="predictor">
+                        <span class="menu-icon"><i data-lucide="sliders"></i></span>
+                        <span class="menu-label">Predictor</span>
+                    </li>
+                    <li class="menu-item" data-tab="trends">
+                        <span class="menu-icon"><i data-lucide="trending-up"></i></span>
+                        <span class="menu-label">Market Trends</span>
+                    </li>
+
+                </ul>
+            </nav>
+
+
+        </aside>
+
+        <!-- Main Display Panel -->
+        <main class="main-panel">
+            <!-- Top Navigation Bar -->
+            <header class="top-nav">
+                <div class="search-container">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" placeholder="Search markets, cities...">
+                </div>
+                
+                <div class="nav-links">
+                    <a href="#" class="nav-link active">Market Data</a>
+                </div>
+            </header>
+
+            <!-- Dashboard Pages -->
+            <div class="content-viewport">
+                
+                <!-- Tab 1: Predictor Page -->
+                <section id="tab-predictor" class="tab-content active">
+                    <div class="grid-container grid-2-col">
+                        <!-- Left Parameter Inputs -->
+                        <div class="panel-left">
+                            <div class="card glass-card">
+                                <div class="card-header">
+                                    <h3 class="card-title"><i data-lucide="sliders-horizontal" class="header-icon"></i>Asset Parameters</h3>
+                                    <span class="status-pill green-pulse">Real-Time Sync</span>
+                                </div>
+                                <div class="card-body">
+                                    <!-- City Input -->
+                                    <div class="input-group">
+                                        <label for="input-city">Target City</label>
+                                        <select id="input-city" class="custom-select">
+                                            <option value="Mumbai" selected>Mumbai</option>
+                                            <option value="Bangalore">Bangalore</option>
+                                            <option value="Pune">Pune</option>
+                                            <option value="Nagpur">Nagpur</option>
+                                            <option value="New Delhi">New Delhi</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Locality Autocomplete Input -->
+                                    <div class="input-group autocomplete-container">
+                                        <label for="input-locality">Locality</label>
+                                        <div class="autocomplete-wrapper">
+                                            <input type="text" id="input-locality" placeholder="e.g. Bandra West, Whitefield, Hinjewadi..." autocomplete="off">
+                                            <div id="autocomplete-list" class="autocomplete-suggestions"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Property Type Input -->
+                                    <div class="input-group">
+                                        <label for="input-property-type">Property Type</label>
+                                        <select id="input-property-type" class="custom-select">
+                                            <option value="Flat" selected>Flat / Apartment</option>
+                                            <option value="House">Independent House</option>
+                                            <option value="Villa">Villa / Bungalow</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Sliders -->
+                                    <div class="slider-group">
+                                        <div class="slider-header">
+                                            <span>Square Footage (Area)</span>
+                                            <span class="slider-value" id="val-area">800 sq ft</span>
+                                        </div>
+                                        <input type="range" id="input-area" min="200" max="5000" step="50" value="800" class="custom-slider">
+                                    </div>
+
+                                    <div class="slider-group">
+                                        <div class="slider-header">
+                                            <span>Bedrooms (Beds)</span>
+                                            <span class="slider-value" id="val-beds">2 Bedrooms</span>
+                                        </div>
+                                        <input type="range" id="input-beds" min="1" max="10" step="1" value="2" class="custom-slider">
+                                    </div>
+
+                                    <div class="slider-row">
+                                        <div class="slider-group flex-1">
+                                            <div class="slider-header">
+                                                <span>Bathrooms</span>
+                                                <span class="slider-value" id="val-bathrooms">2 Bath</span>
+                                            </div>
+                                            <input type="range" id="input-bathrooms" min="1" max="8" step="1" value="2" class="custom-slider">
+                                        </div>
+                                        <div class="slider-group flex-1">
+                                            <div class="slider-header">
+                                                <span>Balconies</span>
+                                                <span class="slider-value" id="val-balconies">1 Balcony</span>
+                                            </div>
+                                            <input type="range" id="input-balconies" min="0" max="6" step="1" value="1" class="custom-slider">
+                                        </div>
+                                    </div>
+
+                                    <!-- Furnishing Tab Buttons -->
+                                    <div class="input-group">
+                                        <label>Furnishing Status</label>
+                                        <div class="furnishing-tabs">
+                                            <button class="furnishing-btn" data-val="Unfurnished">Unfurnished</button>
+                                            <button class="furnishing-btn active" data-val="Semi-Furnished">Semi-Furnished</button>
+                                            <button class="furnishing-btn" data-val="Furnished">Fully Furnished</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Amenities -->
+                                    <div class="input-group">
+                                        <label>Key Amenities</label>
+                                        <div class="amenities-container">
+                                            <button class="amenity-btn active" title="Elevator/Lift">
+                                                <i data-lucide="arrow-up-down"></i>
+                                            </button>
+                                            <button class="amenity-btn" title="Swimming Pool">
+                                                <i data-lucide="waves"></i>
+                                            </button>
+                                            <button class="amenity-btn active" title="Fitness Gym">
+                                                <i data-lucide="dumbbell"></i>
+                                            </button>
+                                            <button class="amenity-btn active" title="Covered Parking">
+                                                <i data-lucide="square-parking"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Rent Trend Forecast (12 Months) -->
+                            <div class="card glass-card chart-card mt-6">
+                                <div class="card-header">
+                                    <h3 class="card-title"><i data-lucide="line-chart" class="header-icon"></i>Rent Trend Forecast (12 Months)</h3>
+                                    <span class="card-subtitle">Projected Rent (INR)</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="trendChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Output Panels -->
+                        <div class="panel-right">
+                            <!-- Rent Prediction Output -->
+                            <div class="card glass-card output-rent-card glow-card">
+                                <div class="card-body centered-content">
+                                    <p class="rent-label">Estimated Monthly Rent</p>
+                                    <div class="rent-value-container">
+                                        <span class="rent-currency">₹</span>
+                                        <h1 class="rent-amount" id="predicted-rent-val">0</h1>
+                                        <span class="rent-change-badge">+12.4%</span>
+                                    </div>
+                                    <p class="rent-subtext">Based on current market volatility and regional demand spikes in the last 24 hours.</p>
+                                    <button class="btn btn-primary btn-lock"><i data-lucide="lock" class="btn-icon"></i>Lock Valuation</button>
+                                </div>
+                            </div>
+
+                            <!-- Market Health Index -->
+                            <div class="card glass-card mt-6">
+                                <div class="card-header">
+                                    <h3 class="card-title"><i data-lucide="heart" class="header-icon"></i>Market Health Index</h3>
+                                </div>
+                                <div class="card-body market-health-body">
+                                    <div class="gauge-container">
+                                        <svg viewBox="0 0 100 100" class="radial-gauge">
+                                            <circle cx="50" cy="50" r="40" class="gauge-bg" />
+                                            <circle cx="50" cy="50" r="40" class="gauge-fill" stroke-dasharray="251.2" stroke-dashoffset="45" />
+                                            <text x="50" y="55" class="gauge-text" id="health-index-val">82</text>
+                                        </svg>
+                                    </div>
+                                    <div class="gauge-stats">
+                                        <div class="stat-badge high-demand">
+                                            <span class="badge-dot"></span>
+                                            High Demand
+                                        </div>
+                                        <div class="stat-badge low-inventory">
+                                            <span class="badge-dot"></span>
+                                            Low Inventory
+                                        </div>
+                                        <p class="health-subtext">Median rental period in your area has dropped to <strong>14 days</strong>.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Geospatial layer -->
+                            <div class="card glass-card map-card mt-6">
+                                <div class="card-body geospatial-body">
+                                    <div class="map-mockup">
+                                        <div class="map-overlay">
+                                            <span class="map-label">Geospatial Layer</span>
+                                            <h4 class="map-title">View Local Hotspots</h4>
+                                        </div>
+                                        <div class="radar-ping"></div>
+                                        <div class="radar-ping-2"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 2: Market Trends Page -->
+                <section id="tab-trends" class="tab-content">
+                    <h1 class="page-title">Market Trends</h1>
+                    <p class="page-subtitle"><span class="pulse-indicator"></span> Live Data Engine Active</p>
+                    
+                    <div class="grid-container grid-2-col mt-6">
+                        <!-- Left Analytics -->
+                        <div class="panel-left">
+                            <!-- Inter-City Median Rent -->
+                            <div class="card glass-card chart-card">
+                                <div class="card-header">
+                                    <h3 class="card-title"><i data-lucide="bar-chart-3" class="header-icon"></i>Inter-City Median Rent (INR/Month)</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="medianRentChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Furnishing Premium -->
+                            <div class="card glass-card mt-6">
+                                <div class="card-header">
+                                    <h3 class="card-title"><i data-lucide="armchair" class="header-icon"></i>Furnishing Premium</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="furnishing-premium-grid">
+                                        <div class="premium-card">
+                                            <div class="premium-icon"><i data-lucide="square"></i></div>
+                                            <p class="premium-label">Unfurnished</p>
+                                            <h3 class="premium-value" id="premium-val-unfurnished">Base</h3>
+                                            <p class="premium-sub">Reference</p>
+                                        </div>
+                                        <div class="premium-card active">
+                                            <div class="premium-icon"><i data-lucide="archive"></i></div>
+                                            <p class="premium-label">Semi-Furnished</p>
+                                            <h3 class="premium-value" id="premium-val-semi">+18%</h3>
+                                            <p class="premium-sub">Avg. Lift</p>
+                                        </div>
+                                        <div class="premium-card">
+                                            <div class="premium-icon"><i data-lucide="sofa"></i></div>
+                                            <p class="premium-label">Fully Furnished</p>
+                                            <h3 class="premium-value" id="premium-val-furnished">+35%</h3>
+                                            <p class="premium-sub">Avg. Lift</p>
+                                        </div>
+                                    </div>
+                                    <p class="premium-footer-text">"In high-demand hubs like Whitefield (Bangalore), 'Fully Furnished' properties command up to 45% premiums due to the transient workforce."</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Analytics -->
+                        <div class="panel-right">
+                            <!-- Top Localities Leaderboard -->
+                            <div class="card glass-card">
+                                <div class="card-header">
+                                    <h3 class="card-title"><i data-lucide="award" class="header-icon"></i>Top Localities</h3>
+                                    <span class="card-subtitle">Yield per sq ft</span>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="top-localities-list" id="top-localities-list">
+                                        <!-- Will be populated dynamically -->
+                                    </ul>
+                                    <button class="btn btn-secondary w-100 mt-4">View Full Index</button>
+                                </div>
+                            </div>
+
+                            <!-- Statistical indicators Grid -->
+                            <div class="grid-container grid-2-col mt-6 gap-4">
+                                <div class="card glass-card stat-metric-card">
+                                    <div class="card-body">
+                                        <div class="stat-metric-header">
+                                            <i data-lucide="trending-down" class="metric-icon pink-text"></i>
+                                            <span class="metric-badge green-bg">+2.4% MoM</span>
+                                        </div>
+                                        <h2 class="metric-value" id="stat-vacancy">7.2%</h2>
+                                        <p class="metric-label">National Vacancy Rate</p>
+                                    </div>
+                                </div>
+                                <div class="card glass-card stat-metric-card">
+                                    <div class="card-body">
+                                        <div class="stat-metric-header">
+                                            <i data-lucide="clock" class="metric-icon cyan-text"></i>
+                                            <span class="metric-badge blue-bg">Fast Moving</span>
+                                        </div>
+                                        <h2 class="metric-value" id="stat-time-to-lease">18d</h2>
+                                        <p class="metric-label">Avg. Time to Lease</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- AI Prediction Engine Callout -->
+                            <div class="card glass-card alert-engine-card mt-6">
+                                <div class="card-body">
+                                    <div class="engine-content">
+                                        <div class="engine-icon"><i data-lucide="cpu"></i></div>
+                                        <div class="engine-text">
+                                            <h4>AI Prediction Engine</h4>
+                                            <p>Rents expected to surge by 12% in Pune North next quarter due to major IT park expansion projects.</p>
+                                        </div>
+                                        <i data-lucide="chevron-right" class="engine-arrow"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Client-side script -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
